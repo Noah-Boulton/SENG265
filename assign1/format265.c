@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <string.h>
+#include <stdlib.h>
 
 #define MAX_INPUT_LINES 500
 #define MAX_CHARS_PER_LINE 132
@@ -10,6 +11,7 @@ int left = 0;
 int formatting = 0;
 int spacing = 0;
 char output[MAX_INPUT_LINES * MAX_CHARS_PER_LINE * 2];
+char formatted[MAX_CHARS_PER_LINE];
 int line_length = 0;
 /*Prototype definitions*/
 int formatting_type(char* processed);
@@ -38,7 +40,7 @@ void read_input(FILE *data){
 				line_length++;
 			}
 		}
-		if(formatting && !strncmp(line, "\n", 1){
+		if(formatting && !strncmp(line, "\n", 1)){
 			strncat(output, "\n\n", MAX_CHARS_PER_LINE);
 			if(spacing){
 				int i = 0;
@@ -60,45 +62,34 @@ void read_input(FILE *data){
 	return;
 }
 
-void formatting_type (char *current_line) {
-	if(strcmp(current_line[0],".LW") != 0){
-		width = current_line[1];
-		formatting = 1;
-	}else if(strcmp(current_line[0],".LM") != 0){
-		left = current_line[1];
-		formatting = 1;
-	} else if(strcmp(current_line[0],".LS") != 0){
-		spacing = current_line[1];
-		formatting = 1;
-	}
-    
-}
-void tokenize(char *processed) {
-	char *tokenized_output;
-	tokenized_output = strtok(processed, " ");
-
- /*	while (tokenized_output && num_words < MAX_INPUT_LINES) {
- 		strncpy (words[num_words], tokenized_output, MAX_INPUT_LINES);
- 		num_words++;
- 		tokenized_output = strtok (NULL, " ");
- 	} */
- 	
-}
-void format(char *processed) {
-	tokenized(processed);
-	if(left) {
-		int i;
-		for( i = 0; i < left; i++){
-			/* add " " to output */
+int formatting_type (char* processed) {
+	char current_line[MAX_CHARS_PER_LINE];
+	strncpy(current_line, processed, MAX_CHARS_PER_LINE);
+	strtok(current_line, " \n");
+	if(!strncmp(current_line,".FT", MAX_CHARS_PER_LINE)){
+		char* fmt = strtok(current_line, " \n");
+		if(!strncmp(fmt, "on", 3)){
+			formatting = 1;
+		}else{
+			formatting = 0;
 		}
-	}
-	if(width) {
-		int line_length = left;
-		int i = 0;
-		while(strlen(processed[i]) +  line_length < width) {
-			/* add the word to output*/
-			i++;
-		}
-	}
+		return 1;
+	} else if(!strncmp(current_line,".LM", MAX_CHARS_PER_LINE)){
+		left = atoi(strtok(NULL, " \n"));
+		formatting = 1;
+		return 1;
+	} else if(!strncmp(current_line,".LS", MAX_CHARS_PER_LINE)){
+		spacing = atoi(strtok(NULL, " \n"));
+		formatting = 1;
+		return 1;
+	} else if(!strncmp(current_line, ".LW", MAX_CHARS_PER_LINE)){
+		width = atoi(strtok(NULL, " \n"));
+		formatting = 1;
+		return 1;
+	} 
+	return 0; 
 }
 
+void format(char *processed){
+	
+}
