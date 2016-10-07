@@ -3,14 +3,13 @@
 #include <stdlib.h>
 
 #define MAX_INPUT_LINES 500
-#define MAX_CHARS_PER_LINE 132
+#define MAX_CHARS_PER_LINE 133
 
 /*Control keys */
 int width = 0;
 int left = 0;
 int formatting = 0;
 int spacing = 0;
-int newline = 1;
 char output[MAX_INPUT_LINES * MAX_CHARS_PER_LINE * 2];
 char formatted[MAX_CHARS_PER_LINE];
 int line_length = 0;
@@ -37,7 +36,9 @@ void read_input(FILE *data){
 	char original[MAX_CHARS_PER_LINE];
 	while(fgets(line, MAX_CHARS_PER_LINE, (FILE*)data)) {
 		strncpy(original, line, MAX_CHARS_PER_LINE);
-		chomp(line);
+		if(line != NULL){
+			chomp(line);
+		}
 		if(strlen(line) == 0){
 			strncat(output, "\n\n", MAX_CHARS_PER_LINE);
 			if(spacing) {
@@ -59,16 +60,19 @@ void read_input(FILE *data){
 		}
 		if(formatting){
 			format(line);
-			strncat(output, formatted, MAX_CHARS_PER_LINE);
+			strncat(output, formatted, MAX_CHARS_PER_LINE); 
 			strncpy(formatted, "", MAX_CHARS_PER_LINE);
 		} else{
 			strncat(output, original, MAX_CHARS_PER_LINE);
+			strncpy(original, "", MAX_CHARS_PER_LINE);
 		}
 	}
 	if(formatting){
-		int length = strlen(original);
-		if(line[length-1] == '\n'){
-			strncat(output, "\n", 1);
+		if(original != NULL){
+			int length = strlen(original);
+			if(line[length-1] == '\n'){
+				strncat(output, "\n", 1);
+			}
 		}
 	}
 	printf("%s", output);
@@ -88,15 +92,15 @@ int formatting_type (char* processed) {
 		}
 		return 1;
 	} else if(!strncmp(current_line,".LM", MAX_CHARS_PER_LINE)){
-		left = atoi(strtok(NULL, " \n"));
+		left = atoi(strtok(NULL, " "));
 		formatting = 1;
 		return 1;
 	} else if(!strncmp(current_line,".LS", MAX_CHARS_PER_LINE)){
-		spacing = atoi(strtok(NULL, " \n"));
+		spacing = atoi(strtok(NULL, " "));
 		formatting = 1;
 		return 1;
 	} else if(!strncmp(current_line, ".LW", MAX_CHARS_PER_LINE)){
-		width = atoi(strtok(NULL, " \n"));
+		width = atoi(strtok(NULL, " "));
 		formatting = 1;
 		return 1;
 	} 
@@ -135,13 +139,11 @@ void format(char *processed){
 }
 
 void chomp(char *line) {
-    if(line != NULL){
+	if(line != NULL){
 		int length = strlen(line);
 		if (line[length-1] == '\n') {
-   		     line[length-1] = '\0';
-    		} else {
-    			newline = 0;
+   	     	line[length-1] = '\0';
     		}
-    }
+	}
 }	
 
