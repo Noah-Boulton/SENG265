@@ -19,6 +19,7 @@ int line_length = 0;
 int formatting_type(char* processed);
 void format(char *processed);
 void read_input(FILE *data);
+void chomp(char *line);
 
 int main(int argc, char *argv[]) {
 	FILE *data = fopen(argv[1], "r");
@@ -64,8 +65,11 @@ void read_input(FILE *data){
 			strncat(output, original, MAX_CHARS_PER_LINE);
 		}
 	}
-	if(newline && formatting){
-		strncat(output, "\n", 1);
+	if(formatting){
+		int length = strlen(original);
+		if(line[length-1] == '\n'){
+			strncat(output, "\n", 1);
+		}
 	}
 	printf("%s", output);
 	return;
@@ -134,10 +138,10 @@ void chomp(char *line) {
     if(line != NULL){
 		int length = strlen(line);
 		if (line[length-1] == '\n') {
-        line[length-1] = '\0';
-    	} else {
-    		newline = 0;
-    	}
+   		     line[length-1] = '\0';
+    		} else {
+    			newline = 0;
+    		}
     }
 }	
-}
+
