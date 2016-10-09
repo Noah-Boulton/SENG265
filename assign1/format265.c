@@ -104,11 +104,9 @@ int formatting_type (char* processed) {
 		return 1;
 	} else if(!strncmp(current_line,".LM", MAX_CHARS_PER_LINE)){
 		left = atoi(strtok(NULL, " "));
-		formatting = 1;
 		return 1;
 	} else if(!strncmp(current_line,".LS", MAX_CHARS_PER_LINE)){
 		spacing = atoi(strtok(NULL, " "));
-		formatting = 1;
 		return 1;
 	} else if(!strncmp(current_line, ".LW", MAX_CHARS_PER_LINE)){
 		width = atoi(strtok(NULL, " "));
