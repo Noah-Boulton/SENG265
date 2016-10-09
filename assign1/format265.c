@@ -33,13 +33,20 @@ int main(int argc, char **argv) {
 }
 
 void read_input(FILE *data){
+	/*Two char arrays so that in the case the output is not to be 
+	formatted the original array can be added to the output file*/
 	char line[MAX_CHARS_PER_LINE];
 	char original[MAX_CHARS_PER_LINE];
+	/*Each line is tokenized then processed*/
 	while(fgets(line, MAX_CHARS_PER_LINE, (FILE*)data)) {
 		strncpy(original, line, MAX_CHARS_PER_LINE);
+		/*Removes the newline character from the end of the input line*/
 		chomp(line);
+		/*If the original line was a single newline character 
+ 		it needs to be added back in*/
 		if(strlen(line) == 0){
 			strncat(output, "\n\n", MAX_CHARS_PER_LINE);
+			/*Adds the correct spacing in between newlines*/
 			if(spacing) {
 				int i  = 0;
 				while(i <= spacing){
@@ -49,32 +56,44 @@ void read_input(FILE *data){
 			}
 			line_length = 0;
 		}
+		/*Checks for formatting type and sets the keys accordingly*/
 		if(formatting_type(line)){
+			/*If a key was set then jump to the next loop cycle*/
 			continue;
 		}
 		if(formatting){
 			format(line);
+			/*After each line has been formatted, add the 
+ 			formatted text to the output array and clear 
+			the formatted array*/
 			strncat(output, formatted, MAX_CHARS_PER_LINE); 
 			strncpy(formatted, "", MAX_CHARS_PER_LINE);
 		} else{
+			/*If formatting is off, output the original 
+ 			unaltered text*/
 			strncat(output, original, MAX_CHARS_PER_LINE);
 		}
 	}
-	if(newline == 1 && formatting == 1){
-		strncat(output, "\n\n", 1);
-	} 
-	int out_length = strlen(output);
-	if(output[out_length-1] == '\n' && output[out_length-2] == '\n' && output[out_length-3] == '\n') {
-		output[out_length-1] = '\0';
+	/*If the original file ends in a newline it needs to be 
+ 	added back in by checking the newline and formatting keys*/
+	if(formatting){
+		int orig_length = strlen(original);
+		if(original[orig_length-1] == '\n' && orig_length != 1){
+			strncat(output, "\n", 1);
+		}
 	}
+	/*Print the output array to the file*/
 	printf("%s", output);
 	return;
 }
-
+/*Checks for formatting keys and returns 1 if there was a key 
+ detected, 0 otherwise*/
 int formatting_type (char* processed) {
 	char current_line[MAX_CHARS_PER_LINE];
 	strncpy(current_line, processed, MAX_CHARS_PER_LINE);
 	strtok(current_line, " ");
+	/*Check if the first token of the line matches one of 
+ 	the formatting key words and sets the key that corresponds to that type*/
 	if(!strncmp(current_line,".FT", MAX_CHARS_PER_LINE)){
 		char* fmt = strtok(current_line, " ");
 		if(!strncmp(fmt, "on", 3)){
@@ -100,14 +119,17 @@ int formatting_type (char* processed) {
 }
 
 void format(char *processed){
+	/*Tokenizes each line and adds formatted tokens to the output*/
 	char *current_word = strtok(processed, " ");
 	while(current_word != NULL) {
+		/*Adds left spacing if the left key is set*/
 		if(left){
 			while(line_length < left-1){
 				strncat(formatted, " ", 1);
 				line_length++;
 			}
 		}
+		/*Checks to see if the next token will fit on the current line*/
 		if(line_length + strlen(current_word) >= width) {
 			strncat(formatted, "\n", 1);
 			if(spacing) {
@@ -136,6 +158,7 @@ void format(char *processed){
 	return;
 }
 
+/*Removes the newline character at the end of an input line*/
 void chomp(char *line) {
 	if(line != NULL){
 		int length = strlen(line);
