@@ -3,7 +3,7 @@ import fileinput
 import sys
 
 width = 0
-margin = -1
+margin = 0
 spacing = 0
 formatting = False
 length = 0
@@ -45,9 +45,8 @@ def format_set(li):
 		# make sure the margin is greater then 0 and less than width -20
 		if(li[1][0] == "+"):
 			# adding to margin
-			z = li[1][1:]
-			z = int(z)
-			if(margin + z <=  width - 20):
+			z = int(li[1][1:])
+			if(margin + z <=  int(width) - 20):
 				margin = margin + z
 			else:
 				margin = width - 20
@@ -87,17 +86,22 @@ def format_line(line):
 	global length
 	global formatting
 	global margin
-	if(len(line) == 1 and line[0] == "\n"):
-		print("\n", end="")
+	if(len(line) == 0):
+		print("\n\n", end="")
 		#add in linespacing
+		length = 0
 		if(spacing):
-			for x in range(spacing):
+			for x in range(spacing+1):
 				print("\n", end="")
+#		if(margin):
+#			for x in range(margin):
+#				print(" ", end="")
 	for word in line:
 		if(length == 0 and margin > 0):
 			for x in range(margin):
 				print(" ", end="")
-		if(int(width) > 0 and len(word)+ 1 + length <= int(width)):
+		if(len(word) + 1 + length <= int(width) - margin):
+#		if(int(width) > 0 and len(word)+ 1 + length <= int(width)):
 			if(length > 0):
 				print(" ", end="")
 				print(word, end="")
