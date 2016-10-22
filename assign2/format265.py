@@ -8,6 +8,7 @@ spacing = 0
 formatting = False
 length = 0
 new_line = False
+newline_flag = False
 def main():
 	for line in fileinput.input():
 		#split the string up into a list of strings
@@ -20,11 +21,11 @@ def main():
 			li = format_line(li)
 		if(formatting == False):
 			print(line, end="")
-		if(line[-1] == "\n"):
+		if(line[-1] == "\n" and len(line) > 1):
 			global new_line
 			new_line = True
 	if(formatting and new_line):
-		print("")
+		print("\n", end="")
 def format_set(li):
 	global width
 	global margin
@@ -86,16 +87,22 @@ def format_line(line):
 	global length
 	global formatting
 	global margin
+	global newline_flag
 	if(len(line) == 0):
-		print("\n\n", end="")
+		print("\n", end="")
 		#add in linespacing
 		length = 0
-		if(spacing):
+		newline_flag = True
+		if(spacing > 0):
 			for x in range(spacing+1):
 				print("\n", end="")
 #		if(margin):
 #			for x in range(margin):
 #				print(" ", end="")
+		return
+	if(newline_flag == True):
+		print("\n", end="")
+		newline_flag = False
 	for word in line:
 		if(length == 0 and margin > 0):
 			for x in range(margin):
