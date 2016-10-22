@@ -9,6 +9,7 @@ formatting = False
 length = 0
 new_line = False
 newline_flag = False
+#secondary_formatting = False
 def main():
 	for line in fileinput.input():
 		#split the string up into a list of strings
@@ -20,6 +21,10 @@ def main():
 		if(formatting):	
 			li = format_line(li)
 		if(formatting == False):
+#			global secondary_formatting
+#			if(secondary_formatting == True):
+#				print("\n", end="")
+#				secondary_formatting = False
 			print(line, end="")
 		if(line[-1] == "\n" and len(line) > 1):
 			global new_line
@@ -32,6 +37,7 @@ def format_set(li):
 	global spacing
 	global formatting
 	global length
+#	global secondary_formatting
 	if(len(li) < 1):
 		return
 	if(li[0] == ".LW"):
@@ -39,6 +45,7 @@ def format_set(li):
 		# check for the value
 		width = li[1]
 		formatting = True
+#		secondary_fromatting = True
 		return True
 	if(li[0] == ".LM"):
 		# turn on margin
@@ -72,8 +79,13 @@ def format_set(li):
 		# turn on or off formatting
 		if(li[1] == "on"):
 			formatting = True
+#			secondary_fromatting = True
 		else: 
 			formatting = False
+			global newline_flag
+			if(newline_flag == True):
+				print("\n", end ="")
+			newline_flag = False
 		return True
 	if(li[0] == ".LS"):
 		# turn on linespacing 
@@ -96,9 +108,6 @@ def format_line(line):
 		if(spacing > 0):
 			for x in range(spacing+1):
 				print("\n", end="")
-#		if(margin):
-#			for x in range(margin):
-#				print(" ", end="")
 		return
 	if(newline_flag == True):
 		print("\n", end="")
@@ -108,7 +117,6 @@ def format_line(line):
 			for x in range(margin):
 				print(" ", end="")
 		if(len(word) + 1 + length <= int(width) - margin):
-#		if(int(width) > 0 and len(word)+ 1 + length <= int(width)):
 			if(length > 0):
 				print(" ", end="")
 				print(word, end="")
@@ -128,7 +136,6 @@ def format_line(line):
 					print(" ", end="")
 			print(word, end="")
 			length += len(word)
-			# check spacing and margin
 			
 
 if __name__ == "__main__":
