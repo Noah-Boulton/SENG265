@@ -106,7 +106,7 @@ def format_line(line):
 		length = 0
 		newline_flag = True
 		if(spacing > 0):
-			for x in range(spacing+1):
+			for x in range(2*spacing):
 				print("\n", end="")
 		return
 	if(newline_flag == True):
