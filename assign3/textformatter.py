@@ -98,7 +98,7 @@ class Formatter(object):
 			self.newline_flag = True
 			if(self.spacing > 0):
 				for x in range(self.spacing*2):
-					self.formatted_output.append("\n")
+					self.formatted_output.append("")
 			return
 		if(self.newline_flag == True):
 		#	self.formatted_output.append("\n")
