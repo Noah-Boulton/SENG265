@@ -29,8 +29,9 @@ def main():
     f = Formatter(None, input)
     lines = f.get_lines()
 
+    # There was a typo here in the original file. Oops. Now it is fixed.
     for l in lines:
-    print (l)
+        print (l)
 
 
 if __name__ == "__main__":
