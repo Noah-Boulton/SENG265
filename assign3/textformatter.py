@@ -8,8 +8,8 @@ class Formatter(object):
 		self.spacing = 0
 		self.formatting = False
 		self.length = 0
-		self.new_line = False
-		self.newline_flag = False
+	#	self.new_line = False
+	#	self.newline_flag = False
 		self.formatted_output = []
 		self.formatted_line= []
 		if(str(arg1) == "None"):
@@ -41,16 +41,18 @@ class Formatter(object):
 				if(self.formatting == False):
 					if(self.formatted_line):
 						self.formatted_output.append("".join(self.formatted_line))
-					self.formatted_output.append(line.rstrip())
-				if(line[-1] == "\n" and len(line) > 1):
-					self.new_line = True
+					del self.formatted_line[:]
+					self.length = 0;		
+					self.formatted_output.append(line.rstrip('\n'))
+		#		if(line[-1] == "\n" and len(line) > 1):
+		#			self.new_line = True
 			if(self.formatted_line):
 				self.formatted_output.append("".join(self.formatted_line))	
 		#	if(self.formatting and self.new_line):
 		#		self.formatted_output.append("\n")
 	def format_set(self, li):
 	#this is where I should add regex matching
-		if(len(li) < 1):
+		if(len(li) < 1 or len(li) > 2):
 			return
 		if(li[0] == ".LW"):	#could do some more error checking here
 			self.width = li[1]	#and more here
@@ -78,31 +80,34 @@ class Formatter(object):
 			return True
 		if(li[0] == ".FT"):
 			if(li[1] == "on"):
-				self.formattting = True
-			else:
+				self.formatting = True
+				return True
+			elif(li[1] == "off"):
 				self.formatting = False
 			#	if(self.newline_flag == True):
 			#		self.formatted_output.append("\n")
-				self.newline_flag = False
-			return True
+			#	self.newline_flag = False
+				return True
 		if(li[0] == ".LS"):
 			self.spacing = int(li[1])
 			return True
 		return False
 	def format_line(self, line):
-		if(len(line) == 0):
-			self.formatted_output.append("".join(self.formatted_line))
+	#	if(len(line) == 0):
+		if(not line):
+			if(self.formatted_line):
+				self.formatted_output.append("".join(self.formatted_line))
 			del self.formatted_line[:]
 			self.formatted_output.append("")
 			self.length = 0
-			self.newline_flag = True
+		#	self.newline_flag = True
 			if(self.spacing > 0):
 				for x in range(self.spacing*2):
 					self.formatted_output.append("")
 			return
-		if(self.newline_flag == True):
+	#	if(self.newline_flag == True):
 		#	self.formatted_output.append("\n")
-			self.newline_flag = False
+	#		self.newline_flag = False
 		for word in line:
 			if(self.length == 0 and self.margin > 0):
 				for x in range(self.margin):
