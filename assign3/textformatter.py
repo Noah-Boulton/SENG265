@@ -8,29 +8,25 @@ class Formatter(object):
 		self.spacing = 0
 		self.formatting = False
 		self.length = 0
-	#	self.new_line = False
-	#	self.newline_flag = False
 		self.formatted_output = []
 		self.formatted_line= []
 		if(str(arg1) == "None"):
 			#this means a list will be formatted
 			for line in arg2:
-				if(self.format_set(line)):
+				li = line.split()
+				if(self.format_set(li)):
 					continue
 				if(self.formatting):
-					line = self.format_line(line)
-				else:
+					li = self.format_line(li)
+				if(self.formatting == False):
+					if(self.formatted_line):
+						self.formatted_output.append("".join(self.formatted_line))
+					del self.formatted_line[:]
+					self.length = 0
 					self.formatted_output.append(line)
-			#	if(line[-1] == "\n" and len(line > 1)):
-			#		self.new_line = True
-		#	if(self.formatting and self.new_line):
-		#		self.formatted_output.append("\n")
+			if(self.formatted_line):
+				self.formatted_output.append("".join(self.formatted_line))
 		elif(str(arg2) == "None"):
-			#this means that we will format a file
-			#open the file here also check for if it exists (error)
-			#turn the file into lists of each line 
-			#either way
-			
 			input_file = open(arg1, "r")
 			for line in input_file:
 				li = line.split()
@@ -42,14 +38,10 @@ class Formatter(object):
 					if(self.formatted_line):
 						self.formatted_output.append("".join(self.formatted_line))
 					del self.formatted_line[:]
-					self.length = 0;		
+					self.length = 0		
 					self.formatted_output.append(line.rstrip('\n'))
-		#		if(line[-1] == "\n" and len(line) > 1):
-		#			self.new_line = True
 			if(self.formatted_line):
 				self.formatted_output.append("".join(self.formatted_line))	
-		#	if(self.formatting and self.new_line):
-		#		self.formatted_output.append("\n")
 	def format_set(self, li):
 	#this is where I should add regex matching
 		if(len(li) < 1 or len(li) > 2):
@@ -84,30 +76,22 @@ class Formatter(object):
 				return True
 			elif(li[1] == "off"):
 				self.formatting = False
-			#	if(self.newline_flag == True):
-			#		self.formatted_output.append("\n")
-			#	self.newline_flag = False
 				return True
 		if(li[0] == ".LS"):
 			self.spacing = int(li[1])
 			return True
 		return False
 	def format_line(self, line):
-	#	if(len(line) == 0):
 		if(not line):
 			if(self.formatted_line):
 				self.formatted_output.append("".join(self.formatted_line))
 			del self.formatted_line[:]
 			self.formatted_output.append("")
 			self.length = 0
-		#	self.newline_flag = True
 			if(self.spacing > 0):
 				for x in range(self.spacing*2):
 					self.formatted_output.append("")
 			return
-	#	if(self.newline_flag == True):
-		#	self.formatted_output.append("\n")
-	#		self.newline_flag = False
 		for word in line:
 			if(self.length == 0 and self.margin > 0):
 				for x in range(self.margin):
