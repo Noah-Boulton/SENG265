@@ -1,5 +1,6 @@
 import fileinput
 import sys
+import re
 
 class Formatter(object):
 	def __init__(self, arg1, arg2):
@@ -10,6 +11,7 @@ class Formatter(object):
 		self.length = 0
 		self.formatted_output = []
 		self.formatted_line= []
+		self.line_number = 0
 		if(str(arg1) == "None"):
 			#this means a list will be formatted
 			for line in arg2:
@@ -40,45 +42,50 @@ class Formatter(object):
 					del self.formatted_line[:]
 					self.length = 0		
 					self.formatted_output.append(line.rstrip('\n'))
+				self.line_number += 1
 			if(self.formatted_line):
 				self.formatted_output.append("".join(self.formatted_line))	
 	def format_set(self, li):
-	#this is where I should add regex matching
 		if(len(li) < 1 or len(li) > 2):
 			return
-		if(li[0] == ".LW"):	#could do some more error checking here
-			self.width = li[1]	#and more here
+		tmpli= ' '.join(li)
+		LW = re.search(r'^\.LW (\d+)', tmpli)
+		if (LW):
+			self.width =int(LW.group(1))
 			self.formatting = True
 			return True
-		if(li[0] == ".LM"):
-			if(li[1][0] == "+"):
-				z = int(li[1][1:])
+		LM = re.search('^\.LM ([+-]?)(\d+)', tmpli)
+		if (LM):
+			if(LM.group(1) == "+"):
+				z = int(LM.group(2))
 				if(self.margin + z <= int(self.width) - 20):
 					self.margin += z
 				else:
 					self.margin = self.width - 20
-			elif(li[1][0] == "-"):
-				y = int(li[1][1:])
+			elif(LM.group(1) == "-"):
+				y = int(LM.group(2))
 				if(self.margin - y >= 0):
 					self.margin -= y
 				else:
 					self.margin = 0
 			else:
-				x = int(li[1])
+				x = int(LM.group(2))
 				if(int(self.width) > 0 and int(self.width) - 20 >= x):
 					self.margin = x
 				else:
 					self.margin = self.width - 20
 			return True
-		if(li[0] == ".FT"):
-			if(li[1] == "on"):
+		FT = re.search('^.FT (on|off)', tmpli)
+		if (FT):
+			if(FT.group(1) == "on"):
 				self.formatting = True
 				return True
-			elif(li[1] == "off"):
-				self.formatting = False
+			elif(FT.group(1) == "off"):
+				self.formatting =False
 				return True
-		if(li[0] == ".LS"):
-			self.spacing = int(li[1])
+		LS = re.search('^.LS (\d+)', tmpli)
+		if (LS):
+			self.spacing =int(LS.group(1))
 			return True
 		return False
 	def format_line(self, line):
