@@ -11,7 +11,8 @@ the line number, error type, and a short description are printed to stderr.
 
 Tests three and four test for word length issues. These occur when the lenght of a word 
 is longer then the width of the page with or without the margin being set. In either case
-the line number, error type, and a short description are printed to stderr.
+the line number, error type, and a short description are printed to stderr. The word is printed
+accross two lines to accomidate the extra length.
 
 Test five is for case issues with the formatting on and off command. This occurs when 
 the users has the formatting command in uppercase. The line number of the error, error type,

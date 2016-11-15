@@ -1,7 +1,6 @@
 Lorem ipsum dolor sit amet, consectetur 
 adipiscing elit. Nunc nec felis sit amet risus 
 mattis malesuada. 
-.FT ON
 Vestibulum gravida massa nec fermentum viverra. Donec nec risus et justo consectetur 
 vehicula vel vitae quam. Phasellus id posuere 
 sapien, a interdum purus. 
