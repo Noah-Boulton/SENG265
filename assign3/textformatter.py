@@ -39,7 +39,7 @@ class Formatter(object):
 				li = line.split()
 			#	control = self.format_set(li)
 			#	if(control is  None):
-			#		return
+			#		break
 			#	if(control == True):
 			#		continue
 				if(self.format_set(li)):
@@ -98,6 +98,11 @@ class Formatter(object):
 			elif(FT.group(1) == "off"):
 				self.formatting =False
 				return True
+		FT2 = re.search('^.FT (ON|OFF)', tmpli)
+		if (FT2):
+			print("Error on line:", str(self.line_number), file = sys.stderr)
+			print("Capitals used for on and off formatting control. Please use lowercase.", file = sys.stderr)
+			return None
 		LS = re.search('^.LS (-?\d+)', tmpli)
 		if (LS):
 			j = int(LS.group(1))

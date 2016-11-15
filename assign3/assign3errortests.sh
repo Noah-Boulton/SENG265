@@ -17,4 +17,9 @@ echo
 echo Error test 4
 ./textdriver.py /home/nboulton/Desktop/seng265/coursework/assign3/tests/e_in04.txt > \./mye_out04.txt
 
-echo 
+echo
+
+echo Error test 5
+./textdriver.py /home/nboulton/Desktop/seng265/coursework/assign3/tests/e_in05.txt > \./mye_out05.txt
+
+echo  
