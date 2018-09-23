@@ -141,22 +141,38 @@ class Formatter(object):
 					x = word[y:]
 					self.formatted_line.append(x)
 					self.length += len(x)
-				continue	
+				continue
 			if(len(word) > self.width - self.margin):
 				print("Error on input line:", str(self.line_number), file = sys.stderr)
 				print("Length of word is greater then the width of the line minus the margin.", file = sys.stderr)
 				print(word, "Length:", len(word), file = sys.stderr)
-				print("Page width minus margin:",self.width - self.margin, file = sys.stderr)
+				print("Page width minus margin:",self.width - self.margin, file = sys.stderr)	
 				if(self.length == 0 and self.margin > 0):
 					for x in range(self.margin):
 						self.formatted_line.append(" ")
-				if(int(self.width) - self.length > 1):
-					self.formatted_line.append(" ")
-					self.length += 1
+				while(len(word) > 0):
+					if(int(self.width) - self.length > 1 and self.length != 0):
+						self.formatted_line.append(" ")
+						self.length += 1
+					else:
+						self.formatted_output.append("".join(self.formatted_line))
+						self.length = 0
+						del self.formatted_line[:]
+						if(self.spacing > 0):
+							for x in range(self.spacing):
+								self.formatted_line.append("\n")
+						if(self.margin > 0):
+							for x in range(self.margin):
+								self.formatted_line.append(" ")
 					y = int(self.width) - self.length
-					x = word[:y]
-					self.formatted_line.append(x)
+					if(len(word) < y):
+						self.formatted_line.append(word)
+						self.length += len(word)
+						break
+					k = word[:y]
+					self.formatted_line.append(k)
 					self.length = 0
+					word = word[y:]
 					self.formatted_output.append("".join(self.formatted_line))
 					del self.formatted_line[:]
 					if(self.spacing > 0):
@@ -165,10 +181,6 @@ class Formatter(object):
 					if(self.margin > 0):
 						for x in range(self.margin):
 							self.formatted_line.append(" ")
-					z = int(self.width) - self.length
-					x = word[y:z]
-					self.formatted_line.append(x)
-					self.length += len(x)
 				continue
 			if(self.length == 0 and self.margin > 0):
 				for x in range(self.margin):
